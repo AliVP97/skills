@@ -6,24 +6,24 @@ Agent skills for freelance developers who take on projects from Iranian clients.
 
 ## Skills
 
-| Skill | What it does |
-|-------|--------------|
+| Skill                                                               | What it does                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`software-proposal-assistant`](skills/software-proposal-assistant) | Takes a vague project offer through eight steps: screening (go / go with conditions / decline), discovery, an estimate sheet, proposal writing, risk and legal review against Iranian practice, a simulated-client critique, a pass/fail check before sending, and negotiation with an outcome log. Works in Persian and writes milestone-priced proposals in Toman. |
 
 ## Install
 
 ```bash
 # every skill in this repo
-npx skills add OWNER/skills
+npx skills add AliVP97/skills
 
 # just one skill
-npx skills add OWNER/skills --skill software-proposal-assistant
+npx skills add AliVP97/skills --skill software-proposal-assistant
 
 # Claude Code only, user-level (available in every project)
-npx skills add OWNER/skills --skill software-proposal-assistant --agent claude-code --global
+npx skills add AliVP97/skills --skill software-proposal-assistant --agent claude-code --global
 ```
 
-Replace `OWNER` with the GitHub account that hosts this repo. `npx skills add --help` lists all options and `npx skills update` pulls newer versions.
+You can also pass the full URL: `npx skills add https://github.com/AliVP97/skills`. `npx skills add --help` lists all options and `npx skills update` pulls newer versions.
 
 ## Before first use
 
@@ -45,6 +45,8 @@ CHANGELOG.md
 `npx skills add` discovers every `skills/<name>/SKILL.md`, so adding a skill means adding a folder there. The `name` in its frontmatter must match the folder name.
 
 ## Improving a skill
+
+Clone the repo first: `git clone https://github.com/AliVP97/skills.git`.
 
 1. **Edit** the files under `skills/<name>/`. Keep `SKILL.md` short (under about 500 lines) and put per-step detail in `references/`. When you add a rule, write down why it matters; a rule with a reason generalises to cases the example did not cover.
 2. **Validate:** `pip install pyyaml && python scripts/validate_skills.py`. It checks frontmatter (a stray colon in `description` silently breaks a skill), name and folder agreement, description length, and that every `references/` and `assets/` path mentioned in the skill exists.
