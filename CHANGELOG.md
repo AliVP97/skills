@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- One workspace folder for everything: personal files and `projects/<id>/{client,internal}/` now live together in `~/.config/freelance-skills/`, which can be a private git repo shared across devices. Nothing is written into the project's own repo any more, so the `.gitignore` checks are gone.
+- New start-of-work checks: the workspace must be its own repo, its remote must be private (checked with `gh` on GitHub, otherwise confirmed by the user), and it is pulled with `--ff-only`. Commit and push only with the user's approval.
+- Project ids are short Latin kebab-case with the Jalali year and month, e.g. `1405-08-online-shop`.
+- Screening and principle 7 no longer assume the user is a frontend developer; "outside expertise" now means outside the expertise listed in `settings.md`.
+
 ## 0.2.0 - 2026-10-16
 
 - New skill `project-estimation-assistant`:

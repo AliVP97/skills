@@ -32,10 +32,35 @@ The estimation assistant runs `scripts/estimate.py`, which needs Python 3.9+ and
 
 ## Before first use
 
-Your personal data never lives in this repo. The skills keep it in two places:
+Your personal data never lives in this repo. The skills keep everything in one **workspace folder**, `~/.config/freelance-skills/` by default:
 
-- **A personal folder shared by all projects:** `~/.config/freelance-skills/`, holding `settings.md` (hourly rate, expertise, free hours, red lines, team members, estimation defaults), `facts.md` (researched prices and lead times with source and expiry date), `outcome-log.md` (proposal outcomes and actual hours per milestone) and `legal-clauses.md` (your approved clauses). On first run the assistant asks only for what it needs, shows you the file and writes it after you approve. Keep this folder outside any git repo.
-- **A folder per project:** `docs/proposal/` inside the project folder (usually the project's own repo). `client/` holds what the client sees; `internal/` holds screening, estimates, price sheets and reviews, and is added to the project's `.gitignore` from day one, because the repo is handed to the client at the end and git history keeps whatever was committed.
+```
+~/.config/freelance-skills/
+  settings.md        hourly rate, expertise, free hours, red lines, team members, estimation defaults
+  facts.md           researched prices and lead times with source and expiry date
+  outcome-log.md     proposal outcomes and actual hours per milestone
+  legal-clauses.md   your approved clauses
+  projects/
+    1405-08-online-shop/
+      client/        what the client sees
+      internal/      screening, estimates, price sheets and reviews
+```
+
+On first run the assistant asks only for what it needs, shows you each file and writes it after you approve. Nothing is written into the project's own repo, because that repo is handed to the client at the end and git history keeps whatever was committed.
+
+To use the same workspace on several devices, make it a **private** git repo and clone it to the same path on each device:
+
+```bash
+git clone <your-private-repo-url> ~/.config/freelance-skills
+```
+
+If you keep the clone somewhere else, symlink the default path to it:
+
+```bash
+ln -s <path-to-your-clone> ~/.config/freelance-skills
+```
+
+At the start of each session the assistant checks that the folder is its own repo (not inside a project repo), that the remote is private (with `gh` for GitHub, otherwise it asks you), and pulls with `--ff-only`. It offers to commit and push after writing, and does so only when you approve.
 
 The layout of these files is defined once in `assets/shared-contract.md`, which both skills ship.
 
