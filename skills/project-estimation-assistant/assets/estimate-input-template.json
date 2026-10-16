@@ -1,0 +1,121 @@
+{
+  "_note": "قالب فایل منبع حقیقت برآورد. کپی کن به docs/proposal/internal/estimate-v1.json، کلیدهای _note را می‌توانی نگه داری یا حذف کنی. اسکریپت کلیدهای ناشناخته را نادیده می‌گیرد.",
+  "meta": {
+    "project": "نام پروژه",
+    "version": 1,
+    "mode": "full",
+    "_mode_note": "full برای برآورد کامل، quick برای برآورد سریع (اجزای درشت، بدون سقف ۱۶ ساعت و بدون چک‌لیست).",
+    "start_date": "1405-08-01",
+    "deadline": null,
+    "requested_weeks": null
+  },
+  "settings": {
+    "_note": "فقط مقدارهایی که از پیش‌فرض اسکریپت فرق دارند. مقدارها را از settings.md کاربر بردار؛ چیزی نساز.",
+    "self_expertise": ["frontend"],
+    "subcontractor_margin": null,
+    "approval_days": 7,
+    "proposal_validity_days": 14
+  },
+  "people": [
+    {
+      "id": "me",
+      "name": "من",
+      "kind": "self",
+      "rate": null,
+      "weekly_hours": 20,
+      "time_factor": {},
+      "_note": "time_factor فقط از کاربر و فقط برای زمان‌بندی، مثلاً {\"backend\": 1.5}."
+    },
+    {
+      "id": "backend-unknown",
+      "name": "بک‌اند (مجری نامشخص)",
+      "kind": "unknown",
+      "roles": ["backend"],
+      "rate": null,
+      "rate_source": "",
+      "pricing": "hourly",
+      "weekly_hours": 20,
+      "_note": "kind یکی از self, team, subcontractor, unknown. برای قیمت ثابت: pricing=fixed و fixed_quotes={\"M1\": مبلغ}. weekly_hours مجری نامشخص یک فرض است؛ در فرض‌ها هم بنویس."
+    }
+  ],
+  "milestones": [
+    {"id": "M1", "name": "milestone اول", "deliverable": "خروجی قابل‌تحویل", "acceptance": "معیار پذیرش"}
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "milestone": "M1",
+      "title": "شرح کار",
+      "role": "frontend",
+      "seniority": "senior",
+      "executor": "me",
+      "o": 4,
+      "m": 6,
+      "p": 10,
+      "depends_on": [],
+      "flags": [],
+      "assumption": "فرض پشت این برآورد",
+      "confidence": "متوسط",
+      "status": "todo",
+      "_note": "flags دستی فقط vague_input؛ outside_expertise و unknown_executor را اسکریپت از مجری درمی‌آورد. اختیاری: addon (شناسه‌ی افزودنی)، cut_group (گروه منوی کاهش)."
+    }
+  ],
+  "scope": [
+    {"item": "قلم محدوده از نیازسنجی", "tasks": ["T1"]}
+  ],
+  "checklist": {
+    "_note": "هر کلید یا tasks دارد یا reason. کلیدها ثابت‌اند؛ معنی‌شان در assets/forgotten-work-checklist.md.",
+    "testing": {"tasks": []},
+    "deploy": {"tasks": []},
+    "foreign_deps": {"reason": ""},
+    "integrations": {"reason": ""},
+    "security": {"tasks": []},
+    "docs": {"tasks": []},
+    "handover": {"tasks": []},
+    "data_migration": {"reason": ""},
+    "warranty": {"tasks": []},
+    "client_revisions": {"tasks": []}
+  },
+  "external_waits": [
+    {"id": "W1", "title": "زمان انتظار بیرونی", "days": 10, "party": "third", "start_after": null, "blocks": [], "source": "facts.md: ..."}
+  ],
+  "holidays": [],
+  "project_costs": [
+    {"title": "هزینه‌ی یک‌باره‌ای که از قیمت پروژه پرداخت می‌شود", "amount": 0, "milestone": "M1", "source": ""}
+  ],
+  "options": [
+    {"id": "A", "name": "گزینه‌ی انتخاب‌شده", "chosen": true, "build_cost": null},
+    {"id": "B", "name": "گزینه‌ی جایگزین", "build_cost": 0, "one_time": 0, "monthly": 0}
+  ],
+  "operating_costs": [
+    {"title": "میزبانی", "option": "A", "one_time": 0, "monthly_low": 0, "monthly_high": 0, "source": "", "checked": "1405-07-24", "expires": "1405-08-23"}
+  ],
+  "addons": [
+    {"id": "A1", "title": "افزودنی اختیاری"}
+  ],
+  "cut_groups": [
+    {"id": "G1", "title": "گروه قابل حذف"}
+  ],
+  "scenarios": [
+    {"name": "تنها", "assign": {"backend": "me"}},
+    {"name": "تو و متخصص بک‌اند", "assign": {"backend": "backend-unknown"}}
+  ],
+  "support_plan": {
+    "components": [
+      {"title": "به‌روزرسانی امنیتی و وابستگی‌ها", "o": 1, "m": 2, "p": 4}
+    ],
+    "terms": [3, 6, 12],
+    "review_months": 6
+  },
+  "assumptions": [
+    {"id": "A-1", "text": "کارفرما طراحی آماده می‌دهد", "if_false": {"text": "طراحی را ما انجام می‌دهیم", "tasks": [
+      {"title": "طراحی UI", "role": "design", "executor": "me", "milestone": "M1", "o": 8, "m": 12, "p": 20}
+    ], "wait_days": 0}}
+  ],
+  "risks": [
+    {"id": "R1", "text": "شرح ریسک", "probability": "متوسط", "impact": "زیاد", "mitigation": "راه کاهش", "owner": "تو", "accounted_in": "task_p", "ref": "T1", "top": true}
+  ],
+  "facts_used": [
+    {"claim": "ادعا", "source": "لینک", "checked": "1405-07-24", "expires": "1405-08-23", "kind": "price"}
+  ]
+}

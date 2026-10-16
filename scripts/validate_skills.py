@@ -2,8 +2,10 @@
 """Validate every skill under skills/.
 
 Checks frontmatter, name/folder agreement, description rules, a single SKILL.md
-per skill, and that every references/ or assets/ path mentioned inside a skill
-points at a file that exists. Exits non-zero when anything is wrong.
+per skill, that every references/, assets/ or scripts/ path mentioned inside a
+skill points at a file that exists, that bundled Python scripts compile, and that
+every copy of the shared contract (assets/shared-contract.md) is identical across
+skills. Exits non-zero when anything is wrong.
 
 Usage: python scripts/validate_skills.py   (needs PyYAML: pip install pyyaml)
 """
@@ -19,7 +21,8 @@ SKILLS_DIR = ROOT / "skills"
 ALLOWED_KEYS = {"name", "description", "license", "allowed-tools", "metadata", "compatibility"}
 KEBAB_CASE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONTMATTER = re.compile(r"^---\n(.*?)\n---", re.DOTALL)
-PATH_MENTION = re.compile(r"(?:references|assets)/[A-Za-z0-9_./-]+\.[A-Za-z0-9]+")
+PATH_MENTION = re.compile(r"(?:references|assets|scripts)/[A-Za-z0-9_./-]+\.[A-Za-z0-9]+")
+SHARED_CONTRACT = Path("assets") / "shared-contract.md"
 MAX_NAME = 64
 MAX_DESCRIPTION = 1024
 SOFT_MAX_LINES = 500
@@ -93,7 +96,30 @@ def validate_skill(skill_dir):
                     f"{skill_dir.name}: {md_file.relative_to(skill_dir)} mentions {mentioned}, which does not exist"
                 )
 
+    for script in sorted((skill_dir / "scripts").glob("*.py")):
+        try:
+            compile(script.read_text(encoding="utf-8"), str(script), "exec")
+        except SyntaxError as exc:
+            errors.append(f"{skill_dir.name}: {script.relative_to(skill_dir)} does not compile ({exc})")
+
     return errors, warnings
+
+
+def validate_shared_contract(skill_dirs):
+    """Every skill that ships the shared contract must ship the same bytes.
+
+    Skills install independently and cannot read each other's files, so the
+    contract between them is copied into each one; this keeps the copies in step.
+    """
+    copies = [(d.name, (d / SHARED_CONTRACT).read_bytes()) for d in skill_dirs if (d / SHARED_CONTRACT).is_file()]
+    if len(copies) < 2:
+        return []
+    reference_name, reference = copies[0]
+    return [
+        f"{name}: {SHARED_CONTRACT} differs from the copy in {reference_name}; edit both copies together"
+        for name, content in copies[1:]
+        if content != reference
+    ]
 
 
 def main():
@@ -117,6 +143,10 @@ def main():
             failed = True
         else:
             print(f"ok: {skill_dir.name}")
+
+    for message in validate_shared_contract(skill_dirs):
+        print(f"error: {message}")
+        failed = True
 
     return 1 if failed else 0
 
